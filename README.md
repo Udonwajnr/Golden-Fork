@@ -30,7 +30,7 @@ Stack: Next.js (App Router, JavaScript), Tailwind CSS v4, shadcn-style component
 ## Feature map
 
 Customer: /menu, /cart, /checkout, /order-confirmation, /account, /account/orders, /reservations
-Admin (manager/admin role): /admin/orders, /admin/menu, /admin/staff, /admin/inventory, /admin/analytics, /admin/loyalty, /admin/ai-insights
+Admin (manager/admin role): /admin/orders, /admin/menu, /admin/staff, /admin/inventory, /admin/analytics, /admin/loyalty, /admin/ai-insights, /admin/messages
 Staff: /waiter, /kitchen
 
 ## Architecture notes
@@ -39,6 +39,8 @@ Staff: /waiter, /kitchen
 - Inventory deduction: MenuItem.recipe deducts Ingredient.currentStock on order placement, logs to InventoryLog, alerts admins on low stock.
 - Loyalty: 10 points per dollar spent, 100 points = 1 dollar redeemable.
 - AI Insights: rule-based stats computed via MongoDB aggregation, optionally narrated by Claude/Gemini if an API key is set.
+- Chatbot: floating widget on every customer-facing page (src/components/site/chat-widget.jsx), backed by /api/chat. Always uses Claude directly (ANTHROPIC_API_KEY required) with tool use to look up real order status and search the live menu - it never invents menu items or order info. Returns a 503 with a clear message if no key is set.
+- Contact form: public submissions go to ContactMessage + notify admins; manage and reply from /admin/messages.
 - Image uploads: local disk under public/uploads - swap for Cloudinary/S3 before deploying serverless.
 
 ## Known gaps
